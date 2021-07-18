@@ -1,39 +1,48 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Alert} from 'react-native';
-import MessageList from './app/components/MessageList';
-import Toolbar from './app/components/Toolbar';
-import KeyboardState from './app/components/KeyboardState';
-import MeasureLayout from './app/components/MeasureLayout';
-import ActionBar from './app/components/ActionBar';
+
+import MessageList from './components/MessageList';
+import Toolbar from './components/Toolbar';
+import KeyboardState from './components/KeyboardState';
+import MeasureLayout from './components/MeasureLayout';
+import ActionBar from './components/ActionBar';
 import MessagingContainer, {
   INPUT_METHOD,
-} from './app/components/MessagingContainer';
-import {createTextMessage} from './app/utils/MessageUtils';
+} from './components/MessagingContainer';
+import {observer} from 'mobx-react';
+import {MessagesStore} from './store/message';
+import {MESSAGES} from './store/message/constant';
 
-export default class App extends Component {
+@observer
+class App extends Component {
   state = {
-    messages: [createTextMessage('Hi Guest'), createTextMessage('How are you')],
     isInputFocused: false,
     inputMethod: INPUT_METHOD.NONE,
   };
-
   handleChangeFocus = isFocused => {
     this.setState({isInputFocused: isFocused});
   };
   handleSubmit = text => {
-    const {messages} = this.state;
-    this.setState({
-      messages: [createTextMessage(text), ...messages],
-    });
+    // const {messages} = this.state;
+    // this.setState({
+    //   messages: [createTextMessage(text), ...messages],
+    // });
   };
   handleChangeInputMethod = inputMethod => {
     this.setState({inputMethod});
   };
+
   renderToolbar() {
     const {isInputFocused} = this.state;
     return (
       <View style={styles.toolbar}>
-        <Toolbar isFocused={isInputFocused} onSubmit={this.handleSubmit} />
+        <Toolbar
+          isFocused={isInputFocused}
+          onSubmit={this.handleSubmit}
+          onChangeFocus={this.handleChangeFocus}
+          onPressCamera={this.handlePressToolbarCamera}
+          onPressLocation={this.handlePressToolbarLocation}
+        />
       </View>
     );
   }
@@ -66,7 +75,7 @@ export default class App extends Component {
     }
   };
   renderMessageList() {
-    const {messages} = this.state;
+    const messages = MessagesStore || MESSAGES;
     return (
       <View style={styles.content}>
         <MessageList
@@ -124,3 +133,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
 });
+
+export default App;

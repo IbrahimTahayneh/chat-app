@@ -23,14 +23,10 @@ export default class Toolbar extends React.Component {
     isFocused: PropTypes.bool.isRequired,
     onChangeFocus: PropTypes.func,
     onSubmit: PropTypes.func,
-    onPressCamera: PropTypes.func,
-    onPressLocation: PropTypes.func,
   };
   static defaultProps = {
     onChangeFocus: () => {},
     onSubmit: () => {},
-    onPressCamera: () => {},
-    onPressLocation: () => {},
   };
 
   state = {
@@ -76,13 +72,9 @@ export default class Toolbar extends React.Component {
   };
 
   render() {
-    const {onPressCamera, onPressLocation} = this.props;
     const {text} = this.state;
     return (
       <View style={styles.toolbar}>
-        <ToolbarButton title={'C'} onPress={onPressCamera} />
-        <ToolbarButton title={'L'} onPress={onPressLocation} />
-
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
